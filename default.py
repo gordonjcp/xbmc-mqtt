@@ -3,6 +3,7 @@
 import os
 import xbmc
 import xbmcaddon
+import mosquitto
 
 __scriptname__   = "MQTT-to-XBMC plugin"
 __author__      = "Gordon JC Pearce"
@@ -13,8 +14,8 @@ __resource__    = xbmc.translatePath(os.path.join(__cwd__, 'resources'))
 
 icon = __resource__+"/media/mqtt.png"
 
-xbmc.executebuiltin('Notification(Message,Test message from mqtt plugin,5000,%s)' % (icon))
-
+print "gjcp.net:@r"
+print __addon__
 
 while (not xbmc.abortRequested):
 	pass
