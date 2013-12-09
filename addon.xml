@@ -3,8 +3,13 @@
 	name="Mosquitto"
 	version="0.01"
 	provider-name="Gordonjcp (gjcp.net)">
+<license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
+<website>https://github.com/gordonjcp/xbmc-mqtt</website>
+<source>https://github.com/gordonjcp/xbmc-mqtt</source>
+<email>gordonjcp@gjcp.net</email>
+<forum></forum>
 <requires>
-	<import addon="xbmc.python" version="2.0"/>
+	<import addon="xbmc.python" version="2.1"/>
 </requires>
 <extension
 	point="xbmc.service"
