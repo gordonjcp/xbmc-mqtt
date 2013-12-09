@@ -27,11 +27,7 @@ def on_message(mosq, obj, msg):
     except:
         xbmc.log("EE: [%s] - could not parse JSON (%s)" % (__scriptname__, msg.payload))
     # okay, looks like we have valid JSON
-    print msg.payload
-    print u['sub']
     stdmessage(**u)
-
-
 
 if __name__ == "__main__":
     # get the basic settings
