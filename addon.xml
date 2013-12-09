@@ -8,7 +8,7 @@
 </requires>
 <extension
 	point="xbmc.service"
-	library="addon.py"
+	library="default.py"
 	start="startup">
 </extension>
 <extension point="xbmc.addon.metadata">
