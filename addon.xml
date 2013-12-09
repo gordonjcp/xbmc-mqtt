@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon	id="script.service.mosquitto"
+	name="Mosquitto"
+	version="0.01"
+	provider-name="Gordonjcp (gjcp.net)">
+<requires>
+	<import addon="xbmc.python" version="2.0"/>
+</requires>
+<extension
+	point="xbmc.service"
+	library="addon.py"
+	start="startup">
+</extension>
+<extension point="xbmc.addon.metadata">
+	<platform>all</platform>
+	<summary lang="en">experimental MQTT plugin</summary>
+</extension>
+</addon>
