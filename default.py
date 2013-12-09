@@ -4,6 +4,7 @@ import os,sys
 import xbmc
 import xbmcaddon
 import mosquitto
+import json
 
 __scriptname__  = "MQTT-to-XBMC plugin"
 __version__     = "0.1"
@@ -16,9 +17,21 @@ __resource__    = xbmc.translatePath(os.path.join(__cwd__, 'resources'))
 # loading message
 xbmc.log("##### [%s] - Version: %s" % (__scriptname__,__version__,),level=xbmc.LOGDEBUG )
 
+def stdmessage(sub="MQTT Message:", txt="no text"):
+
+    xbmc.executebuiltin('Notification(%s,%s,5000)' % (sub, txt))
+
 def on_message(mosq, obj, msg):
-    print dir(msg)
-    pass
+    try:
+        u = json.loads(msg.payload)
+    except:
+        xbmc.log("EE: [%s] - could not parse JSON (%s)" % (__scriptname__, msg.payload))
+    # okay, looks like we have valid JSON
+    print msg.payload
+    print u['sub']
+    stdmessage(**u)
+
+
 
 if __name__ == "__main__":
     # get the basic settings
