@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+<category label="Broker">
+<setting label="Hostname" type="text" id="hostname" default="localhost"/>
+<setting label="Topic" type="text" id="topic" default="xbmc/messages"/>
+</category>
+</settings>
