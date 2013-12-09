@@ -17,5 +17,7 @@ icon = __resource__+"/media/mqtt.png"
 print "gjcp.net:@r"
 print __addon__
 
+print __addon__.getSetting("topic")
+
 while (not xbmc.abortRequested):
 	pass

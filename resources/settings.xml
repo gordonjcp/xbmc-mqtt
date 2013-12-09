@@ -2,6 +2,7 @@
 <settings>
 <category label="Broker">
 <setting label="Hostname" type="text" id="hostname" default="localhost"/>
+<setting label="Port" type="number" id="port" default="1883"/>
 <setting label="Topic" type="text" id="topic" default="xbmc/messages"/>
 </category>
 </settings>
