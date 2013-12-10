@@ -10,7 +10,7 @@ __scriptname__  = "MQTT-to-XBMC plugin"
 __version__     = "0.1"
 __author__      = "Gordon JC Pearce"
 __scriptId__    = "script.service.mosquitto"
-__addon__       = xbmcaddon.Addon(__scriptId__)
+__addon__       = xbmcaddon.Addon()
 __cwd__         = __addon__.getAddonInfo('path')
 __resource__    = xbmc.translatePath(os.path.join(__cwd__, 'resources'))
 
@@ -29,6 +29,15 @@ def on_message(mosq, obj, msg):
     # okay, looks like we have valid JSON
     stdmessage(**u)
 
+def on_connect(mosq, obj, rc):
+    if rc == 0:
+        xbmc.log("II: [%s] - connected to broker" % (__scriptname__))
+        xbmc.executebuiltin('Notification(xbmc-mqtt,Connected to MQTT broker,5000)')
+
+def on_disconnect(mosq, obj, msg):
+    xbmc.log("II: [%s] - connected to broker" % (__scriptname__))
+    xbmc.executebuiltin('Notification(xbmc-mqtt,Disconnected from MQTT broker,5000)')
+
 if __name__ == "__main__":
     # get the basic settings
     host = __addon__.getSetting("hostname")
@@ -41,10 +50,14 @@ if __name__ == "__main__":
         mqtt.connect(host, port, 60)
     except:
         xbmc.log("EE: [%s] - could not connect to MQTT broker (%s, %d)" % (__scriptname__, host, port))
+        xbmc.executebuiltin('Notification(xbmc-mqtt,Could not connect to MQTT broker %s:%s,5000)' % (host, port))
         sys.exit(1)
 
     mqtt.subscribe(topic)
     mqtt.on_message = on_message
+    mqtt.on_connect = on_connect
+    mqtt.on_disconnect = on_disconnect
 
     while not xbmc.abortRequested:
         mqtt.loop(timeout=1)
+    mqtt.disconnect()
