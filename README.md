@@ -1,7 +1,7 @@
 XBMC-MQTT
 =========
 
-Copy everything to ~/.xbmc/addons/script.service.mosquitto/
+Copy script.service.mosquitto/ to ~/.xbmc/addons/
 
 In the Addons menu, go to Services/Mosquitto and fill in the details
 of your broker and desired topic to listen to.
