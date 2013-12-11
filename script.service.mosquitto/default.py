@@ -17,9 +17,8 @@ __resource__    = xbmc.translatePath(os.path.join(__cwd__, 'resources'))
 # loading message
 xbmc.log("##### [%s] - Version: %s" % (__scriptname__,__version__,),level=xbmc.LOGDEBUG )
 
-def stdmessage(sub="MQTT Message:", txt="no text"):
-
-    xbmc.executebuiltin('Notification(%s,%s,5000)' % (sub, txt))
+def stdmessage(sub, txt, img='', delay=5000):
+    xbmc.executebuiltin('Notification(%s,%s,%s,%s)' % (sub, txt, delay, img))
 
 def on_message(mosq, obj, msg):
     try:
