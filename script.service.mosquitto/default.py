@@ -31,20 +31,25 @@ def on_message(mosq, obj, msg):
 def on_connect(mosq, obj, rc):
     if rc == 0:
         xbmc.log("II: [%s] - connected to broker" % (__scriptname__))
-        xbmc.executebuiltin('Notification(xbmc-mqtt,Connected to MQTT broker,5000)')
+        xbmc.executebuiltin('Notification(xbmc-mqtt,Connected to MQTT broker,5000,)')
 
 def on_disconnect(mosq, obj, msg):
-    xbmc.log("II: [%s] - connected to broker" % (__scriptname__))
+    xbmc.log("II: [%s] - disconnected from broker" % (__scriptname__))
     xbmc.executebuiltin('Notification(xbmc-mqtt,Disconnected from MQTT broker,5000)')
 
 if __name__ == "__main__":
     # get the basic settings
-    host = __addon__.getSetting("hostname")
-    port = int(__addon__.getSetting('port'))
-    topic = __addon__.getSetting('topic')
+
+    # shorthand to make using the settings less verbose
+    s = __addon__.getSetting
+
+    host = s('hostname')
+    port = int(s('port'))
+    topic = s('topic')
 
     # create a Mosquitto client, using the XBMC Device name as a label
     mqtt = mosquitto.Mosquitto(xbmc.getInfoLabel("System.FriendlyName"))
+    mqtt.username_pw_set(s('username'), s('password'))
     try:
         mqtt.connect(host, port, 60)
     except:

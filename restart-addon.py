@@ -9,7 +9,7 @@ disable = '{"jsonrpc":"2.0","method":"Addons.SetAddonEnabled","params":{"addonid
 
 if __name__=="__main__":
     # FIXME - this really needs to read the address from somewhere sane
-    h = httplib.HTTPConnection('172.24.33.67', port=8080)
+    h = httplib.HTTPConnection('172.24.33.71', port=8080)
     rc = h.request('GET', '/jsonrpc?request=' + disable)
     print h.getresponse().read()
 
