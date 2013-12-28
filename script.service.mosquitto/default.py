@@ -31,11 +31,11 @@ def on_message(mosq, obj, msg):
 def on_connect(mosq, obj, rc):
     if rc == 0:
         xbmc.log("II: [%s] - connected to broker" % (__scriptname__))
-        xbmc.executebuiltin('Notification(xbmc-mqtt,Connected to MQTT broker,5000,)')
+        xbmc.executebuiltin('Notification(xbmc-mqtt,Connected to MQTT broker,5000,special://skin/media/DefaultIconInfo.png)')
 
 def on_disconnect(mosq, obj, msg):
     xbmc.log("II: [%s] - disconnected from broker" % (__scriptname__))
-    xbmc.executebuiltin('Notification(xbmc-mqtt,Disconnected from MQTT broker,5000)')
+    xbmc.executebuiltin('Notification(xbmc-mqtt,Disconnected from MQTT broker,5000,special://skin/media/DefaultIconWarning.png)')
 
 if __name__ == "__main__":
     # get the basic settings
