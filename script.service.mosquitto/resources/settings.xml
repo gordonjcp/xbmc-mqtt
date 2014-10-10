@@ -7,5 +7,5 @@
 <setting label="Password" type="text" id="password" default="" option="hidden" enable="!eq(-1,)"/>
 <setting type="lsep" label="Notifications"/>
 <setting label="Topic" type="text" id="topic" default="xbmc/messages"/>
-<setting label="Display connection notifications" type="bool" id="conmsgs" default="true"/>
+<setting label="Display connection notifications" type="bool" id="connmsgs" default="true"/>
 </settings>

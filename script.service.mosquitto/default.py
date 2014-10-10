@@ -45,7 +45,7 @@ def on_connect(mosq, obj, rc):
     global connected
     if rc == 0:
         xbmc.log("II: [%s] - connected to broker" % (__scriptname__))
-        if conmsgs:
+        if connmsgs:
             xbmc.executebuiltin('Notification(xbmc-mqtt,Connected to MQTT broker,5000,DefaultIconInfo.png)')
         connected = True
 
@@ -55,7 +55,7 @@ def on_connect(mosq, obj, rc):
 def on_disconnect(mosq, obj, msg):
     global connected
     xbmc.log("II: [%s] - disconnected from broker" % (__scriptname__))
-    if conmsgs:
+    if connmsgs:
         xbmc.executebuiltin('Notification(xbmc-mqtt,Disconnected from MQTT broker,5000,DefaultIconWarning.png)')
     connected = False
 
@@ -69,7 +69,7 @@ if __name__ == "__main__":
     host = s('hostname')
     port = int(s('port'))
     topic = s('topic')
-    conmsgs = 'true' in s('conmsgs')
+    connmsgs = 'true' in s('connmsgs')
 
     # create a Mosquitto client, using the XBMC Device name as a label
     mqtt = mosquitto.Mosquitto(xbmc.getInfoLabel("System.FriendlyName") + "_" + xbmc.getInfoLabel("Network.IPAddress"))
@@ -84,7 +84,7 @@ if __name__ == "__main__":
                 mqtt.loop(timeout=1)
             except:
                 xbmc.log("EE: [%s] - connection lost" % (__scriptname__))
-                if conmsgs:
+                if connmsgs:
                     xbmc.executebuiltin('Notification(xbmc-mqtt,Connection lost,5000,DefaultIconError.png)')
                 connected = False
         else:
@@ -92,7 +92,7 @@ if __name__ == "__main__":
                 mqtt.connect(host, port, 60)
             except:
                 xbmc.log("EE: [%s] - could not connect to MQTT broker (%s, %d)" % (__scriptname__, host, port))
-                if conmsgs:
+                if connmsgs:
                     xbmc.executebuiltin('Notification(xbmc-mqtt,"Could not connect to MQTT broker %s:%s",5000,DefaultIconError.png)' % (host, port))
                 xbmc.sleep(10000)
             else:
