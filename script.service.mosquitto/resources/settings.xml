@@ -5,6 +5,7 @@
 <setting label="Port" type="number" id="port" default="1883"/>
 <setting label="Username" type="text" id="username" default=""/>
 <setting label="Password" type="text" id="password" default="" option="hidden" enable="!eq(-1,)"/>
-<setting type="lsep" label="MQTT"/>
+<setting type="lsep" label="Notifications"/>
 <setting label="Topic" type="text" id="topic" default="xbmc/messages"/>
+<setting label="Display connection notifications" type="bool" id="connmsgs" default="true"/>
 </settings>

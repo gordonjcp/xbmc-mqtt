@@ -17,25 +17,48 @@ __resource__    = xbmc.translatePath(os.path.join(__cwd__, 'resources'))
 # loading message
 xbmc.log("##### [%s] - Version: %s" % (__scriptname__,__version__,),level=xbmc.LOGDEBUG )
 
-def stdmessage(sub, txt, img='', delay=5000):
-    xbmc.executebuiltin('Notification(%s,%s,%s,%s)' % (sub, txt, delay, img))
+connected = False
+
+
+def stdmessage(sub='', txt='', img='DefaultIconInfo.png', delay=5000):
+    if sub:
+        xbmc.executebuiltin('Notification("%s","%s","%s","%s")' % (sub, txt, delay, img))
+    else:
+        xbmc.log("EE: [%s] - no header for notification specified" % (__scriptname__))
+
 
 def on_message(mosq, obj, msg):
     try:
         u = json.loads(msg.payload)
     except:
         xbmc.log("EE: [%s] - could not parse JSON (%s)" % (__scriptname__, msg.payload))
+        return
+
     # okay, looks like we have valid JSON
-    stdmessage(**u)
+    try:
+        stdmessage(**u)
+    except:
+        xbmc.log("EE: [%s] - error in JSON (%s)" % (__scriptname__, msg.payload))
+
 
 def on_connect(mosq, obj, rc):
+    global connected
     if rc == 0:
         xbmc.log("II: [%s] - connected to broker" % (__scriptname__))
-        xbmc.executebuiltin('Notification(xbmc-mqtt,Connected to MQTT broker,5000,special://skin/media/DefaultIconInfo.png)')
+        if connmsgs:
+            xbmc.executebuiltin('Notification(xbmc-mqtt,Connected to MQTT broker,5000,DefaultIconInfo.png)')
+        connected = True
+
+        mqtt.subscribe(topic)
+
 
 def on_disconnect(mosq, obj, msg):
+    global connected
     xbmc.log("II: [%s] - disconnected from broker" % (__scriptname__))
-    xbmc.executebuiltin('Notification(xbmc-mqtt,Disconnected from MQTT broker,5000,special://skin/media/DefaultIconWarning.png)')
+    if connmsgs:
+        xbmc.executebuiltin('Notification(xbmc-mqtt,Disconnected from MQTT broker,5000,DefaultIconWarning.png)')
+    connected = False
+
 
 if __name__ == "__main__":
     # get the basic settings
@@ -46,22 +69,37 @@ if __name__ == "__main__":
     host = s('hostname')
     port = int(s('port'))
     topic = s('topic')
+    connmsgs = 'true' in s('connmsgs')
 
     # create a Mosquitto client, using the XBMC Device name as a label
-    mqtt = mosquitto.Mosquitto(xbmc.getInfoLabel("System.FriendlyName"))
+    mqtt = mosquitto.Mosquitto(xbmc.getInfoLabel("System.FriendlyName") + "_" + xbmc.getInfoLabel("Network.IPAddress"))
     mqtt.username_pw_set(s('username'), s('password'))
-    try:
-        mqtt.connect(host, port, 60)
-    except:
-        xbmc.log("EE: [%s] - could not connect to MQTT broker (%s, %d)" % (__scriptname__, host, port))
-        xbmc.executebuiltin('Notification(xbmc-mqtt,Could not connect to MQTT broker %s:%s,5000)' % (host, port))
-        sys.exit(1)
-
-    mqtt.subscribe(topic)
     mqtt.on_message = on_message
     mqtt.on_connect = on_connect
     mqtt.on_disconnect = on_disconnect
 
-    while not xbmc.abortRequested:
-        mqtt.loop(timeout=1)
+    while True:
+        if connected:
+            try:
+                mqtt.loop(timeout=1)
+            except:
+                xbmc.log("EE: [%s] - connection lost" % (__scriptname__))
+                if connmsgs:
+                    xbmc.executebuiltin('Notification(xbmc-mqtt,Connection lost,5000,DefaultIconError.png)')
+                connected = False
+        else:
+            try:
+                mqtt.connect(host, port, 60)
+            except:
+                xbmc.log("EE: [%s] - could not connect to MQTT broker (%s, %d)" % (__scriptname__, host, port))
+                if connmsgs:
+                    xbmc.executebuiltin('Notification(xbmc-mqtt,"Could not connect to MQTT broker %s:%s",5000,DefaultIconError.png)' % (host, port))
+                xbmc.sleep(10000)
+            else:
+                connected = True
+
+        if xbmc.abortRequested:
+            xbmc.log("II: [%s] - abort requested" % (__scriptname__))
+            break
+
     mqtt.disconnect()
